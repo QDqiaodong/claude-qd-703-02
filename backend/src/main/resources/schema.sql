@@ -32,6 +32,10 @@
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
+-- ----------------------------------------------------------------------------
+-- 维保服务质量分析依赖的复合索引（按窗口 + 楼宇/电梯范围聚合、30 天重复事件自连接）
+-- StatsIndexBootstrap 也会在旧库/扩充库启动时幂等补齐，这里保证全新库一次到位
+-- ----------------------------------------------------------------------------
 CREATE DATABASE IF NOT EXISTS elevator_service DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE elevator_service;
 
@@ -484,3 +488,14 @@ INSERT INTO part_replacement (id, elevator_id, unit_id, building_id, part_name, 
     (22, 1,  1,  1,  '缓冲器液压油', 'HL-46',       3,  88.00,  264.00,  DATE_SUB(NOW(), INTERVAL 2 MONTH), '刘志强', 'ORDER', 10, 'MO-2026-0010', '上海菱云配件有限公司', 'NORMAL', NOW());
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+-- ============================================================================
+-- 维保服务质量分析：聚合加速索引（10 万级数据下窗口聚合走范围扫描）
+-- 与 StatsIndexBootstrap 保持一致；若表上已有同名索引会报错，重新初始化库即可
+-- ============================================================================
+CREATE INDEX idx_plan_date_build_elev ON maintenance_plan (plan_date, building_id, elevator_id, status);
+CREATE INDEX idx_order_actual ON maintenance_order (actual_date, building_id, elevator_id, status);
+CREATE INDEX idx_fault_time_build_elev ON fault_report (report_time, building_id, elevator_id, status, fault_type);
+CREATE INDEX idx_fault_elev_type_time ON fault_report (elevator_id, fault_type, report_time, status);
+CREATE INDEX idx_part_date_build_elev ON part_replacement (replace_date, building_id, elevator_id, status);
+CREATE INDEX idx_elevator_build_next ON elevator (building_id, next_inspect_date);

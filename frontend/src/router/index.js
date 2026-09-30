@@ -46,6 +46,13 @@ export const navItems = [
     icon: '🔧',
     label: '配件更换',
     hint: '金额汇总·关联工单或报修单'
+  },
+  {
+    key: 'quality',
+    path: '/quality',
+    icon: '📊',
+    label: '服务质量分析',
+    hint: '准时率·执行耗时·重复事件·配件成本·楼宇风险（同一快照可钻取可导出）'
   }
 ]
 
@@ -57,6 +64,7 @@ const routes = [
   { path: '/orders', name: 'orders', component: () => import('../views/OrderView.vue') },
   { path: '/faults', name: 'faults', component: () => import('../views/FaultView.vue') },
   { path: '/parts', name: 'parts', component: () => import('../views/PartView.vue') },
+  { path: '/quality', name: 'quality', component: () => import('../views/QualityView.vue') },
   { path: '/:pathMatch(.*)*', redirect: '/dashboard' }
 ]
 

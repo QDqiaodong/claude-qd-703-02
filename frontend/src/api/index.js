@@ -109,3 +109,30 @@ export const partApi = {
 export const overviewApi = {
   get: () => http.get('/overview')
 }
+
+/** 维保服务质量分析（卡片/趋势/排行同一快照、钻取明细、口径复用导出） */
+function qualityParams (p) {
+  return {
+    startDate: p.startDate,
+    endDate: p.endDate,
+    granularity: p.granularity || 'DAY',
+    zone: 'Asia/Shanghai',
+    ...(p.buildingId ? { buildingId: p.buildingId } : {}),
+    ...(p.elevatorId ? { elevatorId: p.elevatorId } : {})
+  }
+}
+
+export const qualityApi = {
+  snapshot: (p) => http.get('/quality/snapshot', { params: qualityParams(p) }),
+  details: (p) => http.get('/quality/details', {
+    params: {
+      ...qualityParams(p),
+      metric: p.metric,
+      scope: p.scope || 'DENOMINATOR',
+      size: p.size || 50,
+      ...(p.cursor ? { cursor: p.cursor } : {})
+    }
+  }),
+  /** 导出为 Blob：不复用拦截器，错误体手动解析 */
+  exportUrl: (p) => '/api/quality/export?' + new URLSearchParams(qualityParams(p)).toString()
+}

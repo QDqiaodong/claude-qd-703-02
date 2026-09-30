@@ -41,6 +41,13 @@ export const navItems = [
     hint: '困人标红·响应与到达时长·状态推进'
   },
   {
+    key: 'quality',
+    path: '/quality',
+    icon: '📈',
+    label: '服务质量分析',
+    hint: '准时率·耗时·重复事件·配件成本·楼宇风险'
+  },
+  {
     key: 'parts',
     path: '/parts',
     icon: '🔧',
@@ -56,6 +63,7 @@ const routes = [
   { path: '/elevators', name: 'elevators', component: () => import('../views/ElevatorView.vue') },
   { path: '/orders', name: 'orders', component: () => import('../views/OrderView.vue') },
   { path: '/faults', name: 'faults', component: () => import('../views/FaultView.vue') },
+  { path: '/quality', name: 'quality', component: () => import('../views/QualityView.vue') },
   { path: '/parts', name: 'parts', component: () => import('../views/PartView.vue') },
   { path: '/:pathMatch(.*)*', redirect: '/dashboard' }
 ]

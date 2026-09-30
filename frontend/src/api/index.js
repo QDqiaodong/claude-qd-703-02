@@ -109,3 +109,13 @@ export const partApi = {
 export const overviewApi = {
   get: () => http.get('/overview')
 }
+
+/** 维保服务质量分析：卡片、趋势、排行共用 snapshotId 同一快照 */
+export const qualityApi = {
+  snapshot: (params) => http.get('/quality-analytics/snapshot', { params }),
+  details: (params) => http.get('/quality-analytics/details', { params }),
+  exportSnapshot: (snapshotId) => http.get('/quality-analytics/export', {
+    params: { snapshotId },
+    responseType: 'blob'
+  })
+}

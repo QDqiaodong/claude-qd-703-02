@@ -5,8 +5,11 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.Filter;
 
+import com.elevator.service.common.QualityEntityChangeListener;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,6 +19,7 @@ import lombok.Data;
 /** 模块三：维保工单（计划落到执行，或临时派工直接开单；应急抢修单由应急报修受理时生成）。 */
 @Data
 @Entity
+@EntityListeners(QualityEntityChangeListener.class)
 @Table(name = "maintenance_order")
 @Filter(name = FilterNames.BUILDING, condition = "building_id = :buildingId")
 @Filter(name = FilterNames.STATUS, condition = "status <> 'VOID'")

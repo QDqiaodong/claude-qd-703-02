@@ -6,8 +6,11 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.Filter;
 
+import com.elevator.service.common.QualityEntityChangeListener;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -17,6 +20,7 @@ import lombok.Data;
 /** 模块五：配件更换。可关联维保工单或故障报修单，金额 = 数量 × 单价。 */
 @Data
 @Entity
+@EntityListeners(QualityEntityChangeListener.class)
 @Table(name = "part_replacement")
 @Filter(name = FilterNames.BUILDING, condition = "building_id = :buildingId")
 @Filter(name = FilterNames.STATUS, condition = "status <> 'VOID'")

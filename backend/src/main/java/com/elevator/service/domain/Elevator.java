@@ -6,8 +6,11 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.Filter;
 
+import com.elevator.service.common.QualityEntityChangeListener;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,6 +25,7 @@ import lombok.Data;
  */
 @Data
 @Entity
+@EntityListeners(QualityEntityChangeListener.class)
 @Table(name = "elevator")
 @Filter(name = FilterNames.BUILDING, condition = "building_id = :buildingId")
 @Filter(name = FilterNames.STATUS, condition = "status <> 'OUT_OF_SERVICE'")

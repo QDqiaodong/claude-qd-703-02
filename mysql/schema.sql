@@ -105,7 +105,8 @@ CREATE TABLE elevator (
     UNIQUE KEY uk_elevator_no (elevator_no),
     KEY idx_elevator_unit (unit_id),
     KEY idx_elevator_building (building_id),
-    KEY idx_elevator_status (status)
+    KEY idx_elevator_status (status),
+    KEY idx_q_elevator_scope (building_id, id, next_inspect_date)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '电梯台账';
 
 -- ----------------------------------------------------------------------------
@@ -132,7 +133,8 @@ CREATE TABLE maintenance_plan (
     KEY idx_plan_elevator (elevator_id),
     KEY idx_plan_building (building_id),
     KEY idx_plan_date (plan_date),
-    KEY idx_plan_status (status)
+    KEY idx_plan_status (status),
+    KEY idx_q_plan_scope (building_id, elevator_id, plan_date, status)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '维保计划';
 
 CREATE TABLE maintenance_order (
@@ -161,7 +163,8 @@ CREATE TABLE maintenance_order (
     KEY idx_order_elevator (elevator_id),
     KEY idx_order_building (building_id),
     KEY idx_order_status (status),
-    KEY idx_order_fault (fault_id)
+    KEY idx_order_fault (fault_id),
+    KEY idx_q_order_scope (building_id, elevator_id, actual_date, plan_date, status)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '维保工单（含应急抢修单）';
 
 -- ----------------------------------------------------------------------------
@@ -198,7 +201,9 @@ CREATE TABLE fault_report (
     KEY idx_fault_elevator (elevator_id),
     KEY idx_fault_building (building_id),
     KEY idx_fault_status (status),
-    KEY idx_fault_order (order_id)
+    KEY idx_fault_order (order_id),
+    KEY idx_q_fault_scope (building_id, elevator_id, report_time, fault_type, status),
+    KEY idx_q_fault_repeat (elevator_id, fault_type, report_time, id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '故障报修（含应急联动）';
 
 -- ----------------------------------------------------------------------------
@@ -258,7 +263,9 @@ CREATE TABLE part_replacement (
     PRIMARY KEY (id),
     KEY idx_part_elevator (elevator_id),
     KEY idx_part_building (building_id),
-    KEY idx_part_status (status)
+    KEY idx_part_status (status),
+    KEY idx_part_replace_date (replace_date),
+    KEY idx_q_part_scope (building_id, elevator_id, replace_date, status)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '配件更换';
 
 -- ============================================================================
